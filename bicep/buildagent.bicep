@@ -79,6 +79,8 @@ module kv 'buildagent.kv.bicep' = {
   scope: rg
   params: {
     keyVaultName: keyVaultName
+    subnetResourceId: vnet.outputs.subnetResourceId
     vmssPrincipalId: vmss.outputs.principalId
+    vnetResourceId: vnet.outputs.vnetResourceId
   }
 }
