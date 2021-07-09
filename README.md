@@ -26,7 +26,7 @@ STORAGEACCOUNTNAME=mystg
 az deployment sub create \
     --subscription $SUBSCRIPTIONID \
     --location $LOCATION \
-    --template-file buildagent.bicep \
+    --template-file bicep/buildagent.bicep \
     --parameters customDataBase64=$CLOUDINITB64 \
                  adminSshPubKey=$ADMINSSHPUBKEY \
                  resourceGroupName=$RESOURCEGROUPNAME \

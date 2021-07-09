@@ -7,42 +7,11 @@ param customDataBase64 string
 @description('VM SKU to use for VM scale set')
 param vmSku string
 
-@description('Virtual network address prefix, e.g. 10.0.0.0/24')
-param vnetAddressPrefix string
+@description('Subnet resourceId to link the VMSS to')
+param subnetId string
 
 @description('Administrative SSH key for the VM')
 param adminSshPubKey string
-
-resource vnet 'Microsoft.Network/virtualNetworks@2021-02-01' = {
-  name: 'buildagent-vnet'
-  location: resourceGroup().location
-  properties: {
-    addressSpace: {
-      addressPrefixes: [
-        vnetAddressPrefix
-      ]
-    }
-    subnets: [
-      {
-        name: 'default'
-        properties: {
-          addressPrefix: vnetAddressPrefix
-          networkSecurityGroup: {
-            id: nsg.id
-          }
-        }
-      }
-    ]
-  }
-}
-
-resource nsg 'Microsoft.Network/networkSecurityGroups@2021-02-01' = {
-  name: 'buildagent-nsg'
-  location: resourceGroup().location
-  properties: {
-    securityRules: []
-  }
-}
 
 resource vmss 'Microsoft.Compute/virtualMachineScaleSets@2021-03-01' = {
   name: 'buildagent'
@@ -108,7 +77,7 @@ resource vmss 'Microsoft.Compute/virtualMachineScaleSets@2021-03-01' = {
                   name: 'buildagent-ipconfig'
                   properties: {
                      subnet: {
-                       id: vnet.properties.subnets[0].id
+                       id: subnetId
                      }
                   }
                 }
