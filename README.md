@@ -2,7 +2,22 @@
 
 This contains the Bicep template required to deploy the VMSS to Azure
 
-To run standalone:
+## Features
+
+* VM Scale Set
+  * Managed identity enabled
+  * Cloud-init used to install tooling
+* Storage account for Terraform backend
+  * Azure AD RBAC assigned to VMSS identity
+  * Private endpoint
+* Key Vault for secrets storage
+  * Azure AD RBAC assigned to VMSS identity
+  * Private endpoint
+* Private DNS zones
+  * Zone for blob storage
+  * Zone for Key Vault
+
+## Usage
 
 ```bash
 # Generate a random SSH public key, discarding the private key
