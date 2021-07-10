@@ -1,6 +1,6 @@
 # VMSS Azure DevOps Agent (Linux)
 
-This contains a Bicep template that will deploy a VMSS suitable as an Azure Devops agent.
+This contains a Bicep template that will deploy a VMSS suitable for an Azure Devops agent.
 It is currently configured for use with Terraform but can easily be customised using the `cloud-init.yml`.
 
 The resulting ARM JSON file is over 700 lines long, this shows how much easier Bicep is to work with!
