@@ -1,3 +1,7 @@
+/*
+ Summary: Provisions a Azure DevOps build agent using a VMSS. See sub-modules for further detail.
+*/
+
 // Subscription deployemnt of RG, then contained resources as modules
 targetScope = 'subscription'
 
@@ -58,7 +62,7 @@ module vmss './buildagent.vmss.bicep' = {
     adminUserName: adminUserName
     customDataBase64: customDataBase64
     vmSku: vmSku
-    subnetId: vnet.outputs.subnetResourceId
+    subnetResourceId: vnet.outputs.subnetResourceId
   }
 }
 

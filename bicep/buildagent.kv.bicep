@@ -1,11 +1,33 @@
+/*
+ Summary: Provisions a Key Vault with private link and private DNS zone
+*/
 
+// ============================================================================
+// Parameters
+
+@description('Name of Key Vault')
 param keyVaultName string
+
+@description('Subnet resourceId to link the VMSS to')
 param subnetResourceId string
+
+@description('Azure AD principal id of the VMSS managed identity')
 param vmssPrincipalId string
+
+@description('Full resource id of the virtual network in which to create the private endpoint')
 param vnetResourceId string
 
+// ============================================================================
+// Variables
+
+// DNS zone name for the vault service
 var privateLink_dns_zone = 'privatelink.vaultcore.azure.net'
+
+// Built-in roleDefinition GUID for kay vault secrets user
 var roleDefinition_keyVaultSecretsUser = '4633458b-17de-408a-b874-0445c86b69e6'
+
+// ============================================================================
+// Resources
 
 resource kv 'Microsoft.KeyVault/vaults@2019-09-01' = {
   name: keyVaultName
@@ -91,5 +113,8 @@ resource pdnsZoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@
     ]
   }
 }
+
+// ============================================================================
+// Outputs
 
 output vault object = kv

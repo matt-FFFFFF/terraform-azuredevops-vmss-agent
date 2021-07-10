@@ -1,3 +1,10 @@
+/*
+ Summary: Provisions an Ubuntu VM Scale Set for usew with Azure DevOps
+*/
+
+// ============================================================================
+// Parameters
+
 @description('Admin username for VMs')
 param adminUserName string
 
@@ -8,10 +15,13 @@ param customDataBase64 string
 param vmSku string
 
 @description('Subnet resourceId to link the VMSS to')
-param subnetId string
+param subnetResourceId string
 
 @description('Administrative SSH key for the VM')
 param adminSshPubKey string
+
+// ============================================================================
+// Resources
 
 resource vmss 'Microsoft.Compute/virtualMachineScaleSets@2021-03-01' = {
   name: 'buildagent'
@@ -77,7 +87,7 @@ resource vmss 'Microsoft.Compute/virtualMachineScaleSets@2021-03-01' = {
                   name: 'buildagent-ipconfig'
                   properties: {
                      subnet: {
-                       id: subnetId
+                       id: subnetResourceId
                      }
                   }
                 }
@@ -89,5 +99,8 @@ resource vmss 'Microsoft.Compute/virtualMachineScaleSets@2021-03-01' = {
     }
   }
 }
+
+// ============================================================================
+// Outputs
 
 output principalId string = vmss.identity.principalId

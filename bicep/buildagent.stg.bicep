@@ -2,7 +2,6 @@
  Summary: Provisions a storage account with private link and private DNS zone
 */
 
-
 // ============================================================================
 // Parameters
 
