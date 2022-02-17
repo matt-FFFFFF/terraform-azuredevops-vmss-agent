@@ -11,6 +11,9 @@ param adminUserName string
 @description('Cloud Init file encoded as base64')
 param customDataBase64 string
 
+@description('Location for resources')
+param location string = resourceGroup().location
+
 @description('VM SKU to use for VM scale set')
 param vmSku string
 
@@ -25,7 +28,7 @@ param adminSshPubKey string
 
 resource vmss 'Microsoft.Compute/virtualMachineScaleSets@2021-03-01' = {
   name: 'buildagent'
-  location: resourceGroup().location
+  location: location
   identity: {
     type: 'SystemAssigned'
   }

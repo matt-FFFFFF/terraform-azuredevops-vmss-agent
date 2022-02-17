@@ -29,9 +29,6 @@ The resulting ARM JSON file is over 700 lines long, this shows how much easier B
 # Generate a random SSH public key, discarding the private key
 ADMINSSHPUBKEY=$(scripts/generate-random-ssh-pubkey.sh)
 
-# base64 encode the cloud-init.yml fie
-CLOUDINITB64=$(base64 -w0 cloud-init.yml)
-
 # Destination subscription id
 SUBSCRIPTIONID=00000000-0000-0000-0000-000000000000
 
@@ -48,8 +45,7 @@ az deployment sub create \
     --subscription $SUBSCRIPTIONID \
     --location $LOCATION \
     --template-file bicep/buildagent.bicep \
-    --parameters customDataBase64=$CLOUDINITB64 \
-                 adminSshPubKey=$ADMINSSHPUBKEY \
+    --parameters adminSshPubKey="$ADMINSSHPUBKEY" \
                  resourceGroupName=$RESOURCEGROUPNAME \
                  keyVaultName=$KEYVAULTNAME \
                  storageAccountName=$STORAGEACCOUNTNAME

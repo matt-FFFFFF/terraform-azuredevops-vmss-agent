@@ -109,7 +109,7 @@ apt:
         -----END PGP PUBLIC KEY BLOCK-----
 
 packages:
-  - [terraform,0.14.5]
+  - [terraform,1.1.6]
   - azure-cli
   - apt-transport-https
   - software-properties-common

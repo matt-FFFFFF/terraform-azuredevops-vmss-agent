@@ -5,6 +5,9 @@
 // ============================================================================
 // Parameters
 
+@description('Location for resources')
+param location string = resourceGroup().location
+
 @description('The storage account name')
 param storageAccountName string
 
@@ -34,7 +37,7 @@ var privateLink_dns_zone = 'privatelink.blob.${environment().suffixes.storage}'
 
 resource stg 'Microsoft.Storage/storageAccounts@2021-04-01' = {
   name: storageAccountName
-  location: resourceGroup().location
+  location: location
   kind: 'StorageV2'
   sku: {
     name: storageAccountSku
@@ -82,7 +85,7 @@ resource pdnsLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06
 
 resource pe 'Microsoft.Network/privateEndpoints@2021-02-01' = {
   name: '${stg.name}-pe'
-  location: resourceGroup().location
+  location: location
   properties: {
     subnet: {
       id: subnetResourceId

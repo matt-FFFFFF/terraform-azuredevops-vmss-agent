@@ -8,6 +8,9 @@
 @description('Name of Key Vault')
 param keyVaultName string
 
+@description('Location for resources')
+param location string = resourceGroup().location
+
 @description('Subnet resourceId to link the VMSS to')
 param subnetResourceId string
 
@@ -31,7 +34,7 @@ var roleDefinition_keyVaultSecretsUser = '4633458b-17de-408a-b874-0445c86b69e6'
 
 resource kv 'Microsoft.KeyVault/vaults@2019-09-01' = {
   name: keyVaultName
-  location: resourceGroup().location
+  location: location
   properties: {
     enabledForDeployment: false
     enabledForDiskEncryption: false
@@ -80,7 +83,7 @@ resource pdnsLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06
 
 resource pe 'Microsoft.Network/privateEndpoints@2021-02-01' = {
   name: '${kv.name}-pe'
-  location: resourceGroup().location
+  location: location
   properties: {
     subnet: {
       id: subnetResourceId

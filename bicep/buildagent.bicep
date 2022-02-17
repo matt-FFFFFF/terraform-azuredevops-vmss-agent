@@ -12,11 +12,9 @@ targetScope = 'subscription'
 @description('Admin username for VMs')
 param adminUserName string = 'buildagent'
 
+@secure()
 @description('Administrative SSH key for the VM')
 param adminSshPubKey string
-
-@description('Cloud Init file encoded as base64')
-param customDataBase64 string
 
 @description('Name of Key Vault')
 param keyVaultName string
@@ -40,6 +38,12 @@ param vmSku string = 'Standard_B2ms'
 param vnetAddressPrefix string = '10.0.0.0/28'
 
 // ============================================================================
+// Variables
+
+var customDataB64 = loadFileAsBase64('../cloud-init.yml')
+
+
+// ============================================================================
 // Resources
 
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
@@ -52,6 +56,7 @@ module vnet 'buildagent.vnet.bicep' = {
   scope: rg
   params: {
     vnetAddressPrefix: vnetAddressPrefix
+    location: location
   }
 }
 module vmss './buildagent.vmss.bicep' = {
@@ -60,9 +65,10 @@ module vmss './buildagent.vmss.bicep' = {
   params: {
     adminSshPubKey: adminSshPubKey
     adminUserName: adminUserName
-    customDataBase64: customDataBase64
-    vmSku: vmSku
+    customDataBase64: customDataB64
+    location: location
     subnetResourceId: vnet.outputs.subnetResourceId
+    vmSku: vmSku
   }
 }
 
@@ -70,6 +76,7 @@ module stg 'buildagent.stg.bicep' = {
   name: 'stgDeploy'
   scope: rg
   params: {
+    location: location
     storageAccountName: storageAccountName
     storageAccountSku: storageAccountSku
     subnetResourceId: vnet.outputs.subnetResourceId
@@ -83,6 +90,7 @@ module kv 'buildagent.kv.bicep' = {
   scope: rg
   params: {
     keyVaultName: keyVaultName
+    location: location
     subnetResourceId: vnet.outputs.subnetResourceId
     vmssPrincipalId: vmss.outputs.principalId
     vnetResourceId: vnet.outputs.vnetResourceId

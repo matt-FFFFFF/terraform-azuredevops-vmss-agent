@@ -5,6 +5,9 @@
 // ============================================================================
 // Parameters
 
+@description('Location for resources')
+param location string = resourceGroup().location
+
 @description('Virtual network address prefix, e.g. 10.0.0.0/28')
 param vnetAddressPrefix string
 
@@ -13,7 +16,7 @@ param vnetAddressPrefix string
 
 resource vnet 'Microsoft.Network/virtualNetworks@2021-02-01' = {
   name: 'buildagent-vnet'
-  location: resourceGroup().location
+  location: location
   properties: {
     addressSpace: {
       addressPrefixes: [
@@ -37,17 +40,20 @@ resource vnet 'Microsoft.Network/virtualNetworks@2021-02-01' = {
 
 resource nsg 'Microsoft.Network/networkSecurityGroups@2021-02-01' = {
   name: 'buildagent-nsg'
-  location: resourceGroup().location
+  location: location
   properties: {
     securityRules: []
   }
+}
+
+resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-05-01' existing = {
+  parent: vnet
+  name: 'default'
 }
 
 // ============================================================================
 // Outputs
 
 output virtualNetwork object = vnet
-// We need the below as we can't currently output a resource,
-// using the object output and assigning the resource does not give us the full resourceId
-output subnetResourceId string = resourceId('Microsoft.Network/virtualNetworks/subnets',vnet.name,vnet.properties.subnets[0].name)
-output vnetResourceId string = resourceId('Microsoft.Network/virtualNetworks',vnet.name)
+output subnetResourceId string = subnet.id
+output vnetResourceId string = vnet.id
