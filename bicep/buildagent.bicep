@@ -5,7 +5,6 @@
 // Subscription deployemnt of RG, then contained resources as modules
 targetScope = 'subscription'
 
-
 // ============================================================================
 // Parameters
 
@@ -59,6 +58,7 @@ module vnet 'buildagent.vnet.bicep' = {
     location: location
   }
 }
+
 module vmss './buildagent.vmss.bicep' = {
   name: 'vmssDeploy'
   scope: rg
