@@ -30,6 +30,7 @@ The resulting ARM JSON file is over 700 lines long, this shows how much easier B
 ADMINSSHPUBKEY=$(scripts/generate-random-ssh-pubkey.sh)
 
 # Destination subscription id
+# (omit if you want to use the context of az account, remember to remove --subscription from the az command line)
 SUBSCRIPTIONID=00000000-0000-0000-0000-000000000000
 
 # Destination region
@@ -52,3 +53,7 @@ az deployment sub create \
 ```
 
 Finally, complete the setup in Azure DevOps to add the VM extension
+
+## Azure DevOps Pipeline
+
+See the `.azure-pipelines` directory for a sample pipeline to deploy this.

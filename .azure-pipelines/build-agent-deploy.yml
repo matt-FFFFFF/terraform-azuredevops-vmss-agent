@@ -1,0 +1,40 @@
+# Deploy build agent
+#
+# Requires:
+#  - Service connection to Azure subscription
+#  - Service connection SPN to have Owner role for target subscription
+#  - Use of Azure Pipelines cloud build agent
+
+trigger: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  keyVaultName: mykv
+  location: northeurope
+  resourceGroupName: myrg
+  serviceConnection: mysvcconnection
+  storageAccountName: mystg
+
+steps:
+  - checkout: self
+
+  - script: |
+      ./scripts/generate-random-ssh-pubkey.sh > sshkey.txt
+    displayName: Generate SSH public key
+
+  - task: AzureCLI@2
+    name: deploybicep
+    displayName: Deploy Bicep
+    inputs:
+      inlineScript: |
+        az deployment sub create  --template-file bicep/buildagent.bicep \
+                                  --location $LOCATION \
+                                  --parameters adminSshPubKey=@sshkey.txt \
+                                               resourceGroupName=$RESOURCEGROUPNAME \
+                                               keyVaultName=$KEYVAULTNAME \
+                                               storageAccountName=$STORAGEACCOUNTNAME
+      azureSubscription: $(serviceConnection)
+      scriptLocation: inlineScript
+      scriptType: bash
